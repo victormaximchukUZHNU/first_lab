@@ -13,4 +13,4 @@ const responseError = (res, status, errorMessage) => {
 module.exports = {
   responseOK,
   responseError
-}
+};

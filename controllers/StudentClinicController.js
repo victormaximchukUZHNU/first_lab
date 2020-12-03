@@ -81,7 +81,7 @@ const destroy = async (req, res) => {
     if (!id) return responseError(res, 400, 'bad request');
 
     await StudentClinic.deleteOne({ _id: ObjectId(id) });
-    return responseOK(res, { message: 'deleted successfully!' })
+    return responseOK(res, { message: 'deleted successfully!' });
 };
 
 module.exports = {

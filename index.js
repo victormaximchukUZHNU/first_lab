@@ -1,8 +1,16 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const https = require('https')
+const fs = require('fs');
+
 const { DB_URI } = require('./config/connection');
 const StudentClinicController = require('./controllers/StudentClinicController');
+
+const options = {
+  key: fs.readFileSync('./secret/key.pem'),
+  cert: fs.readFileSync('./secret/cert.pem')
+};
 
 const app = express();
 
@@ -18,4 +26,6 @@ app.get('/student-clinic/:id', StudentClinicController.show);
 app.put('/student-clinic/:id', StudentClinicController.update);
 app.delete('/student-clinic/:id', StudentClinicController.destroy);
 
-app.listen(3000, () => {});
+https.createServer(options, app).listen(3443);
+
+app.listen(3000);
