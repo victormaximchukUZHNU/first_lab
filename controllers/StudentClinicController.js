@@ -82,6 +82,8 @@ const update = async (req, res) => {
 };
 
 const destroy = async (req, res) => {
+    const { id } = req.params;
+
     if (!id) return responseError(res, 400, 'bad request');
 
     await StudentClinic.deleteOne({ _id: ObjectId(id) });
