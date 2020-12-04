@@ -24,9 +24,13 @@ const create = async (req, res) => {
     const { fullName, course, healthStatus } = req.body;
 
     if (fullName && course && healthStatus) {
-        const sc = await StudentClinic.create(req.body);
-        
-        if (sc) return responseOK(res)
+        try {
+            await StudentClinic.create(req.body);
+
+            return responseOK(res)
+        } catch (err) {
+            return responseError(res, 400, err.message);
+        }
     }
 
     return responseError(res, 400, 'bad request');
@@ -37,10 +41,10 @@ const createMany = async (req, res) => {
     let valid = true;
 
     if (_.isEmpty(studentsParams)) return responseError(res, 400, 'bad request');
-    
+
     studentsParams.forEach(sp => {
         if (StudentClinic.isValid(sp)) return;
-        
+
         valid = false;
         return;
     });
@@ -70,11 +74,11 @@ const update = async (req, res) => {
     if (course) attrs.course = course;
     if (healthStatus) attrs.healthStatus = healthStatus;
 
-    const sc = await StudentClinic.update({ _id: ObjectId(id) }, attrs);
+    const sc = await StudentClinic.findOneAndUpdate({ _id: ObjectId(id) }, attrs);
 
     if (sc) return responseOK(res, { message: 'updated successfully!' });
 
-    return responseError(res, 400);
+    return responseError(res, 404, 'not found');
 };
 
 const destroy = async (req, res) => {
